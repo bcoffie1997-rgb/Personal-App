@@ -1,26 +1,111 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Backgrounds — light, very subtle differentiation */
+  --bg: 255 255 255;            /* #FFFFFF — pure white */
+  --bg-surface: 250 250 249;    /* #FAFAF9 — barely-there off-white for section grouping */
+  --bg-elevated: 244 244 243;   /* #F4F4F3 — slightly more for hover states */
+
+  /* Borders — very faint, used sparingly */
+  --border: 232 230 227;        /* #E8E6E3 — soft warm gray */
+  --border-strong: 212 210 205; /* #D4D2CD */
+
+  /* Text — warm grays */
+  --text-primary: 28 27 24;     /* #1C1B18 — warm near-black */
+  --text-secondary: 91 88 82;   /* #5B5852 — warm gray for body */
+  --text-tertiary: 142 138 130; /* #8E8A82 — muted */
+
+  /* Muted accents — not neon */
+  --accent: 107 142 118;        /* #6B8E76 — sage */
+  --warning: 184 142 71;        /* #B88E47 — muted amber */
+  --negative: 196 71 71;        /* #C44747 — muted red */
+  --info: 107 137 168;          /* #6B89A8 — steel blue */
+
+  /* Domain accents — muted versions */
+  --finance: 92 144 112;        /* #5C9070 — sage green */
+  --fitness: 201 112 112;       /* #C97070 — dusty rose */
+  --social: 143 122 184;        /* #8F7AB8 — lavender */
+  --professional: 107 137 168;  /* #6B89A8 — steel blue */
+
+  /* Radii */
+  --radius-card: 12px;
+  --radius-button: 8px;
+  --radius-input: 6px;
+  --radius-sheet: 20px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: rgb(var(--bg));
+  --color-surface: rgb(var(--bg-surface));
+  --color-elevated: rgb(var(--bg-elevated));
+  --color-border: rgb(var(--border));
+  --color-border-strong: rgb(var(--border-strong));
+  --color-primary: rgb(var(--text-primary));
+  --color-secondary: rgb(var(--text-secondary));
+  --color-tertiary: rgb(var(--text-tertiary));
+  --color-accent: rgb(var(--accent));
+  --color-warning: rgb(var(--warning));
+  --color-negative: rgb(var(--negative));
+  --color-info: rgb(var(--info));
+  --color-finance: rgb(var(--finance));
+  --color-fitness: rgb(var(--fitness));
+  --color-social: rgb(var(--social));
+  --color-professional: rgb(var(--professional));
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  --radius-card: 12px;
+  --radius-button: 8px;
+  --radius-input: 6px;
+  --radius-sheet: 20px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: rgb(var(--bg));
+  color: rgb(var(--text-primary));
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  color-scheme: light;
+}
+
+/* Safe-area helpers */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Hide scrollbar but allow scrolling */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Tabular numbers utility — applied via tabular-nums class */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Disable iOS tap highlight */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Pulse for skeleton */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.3; }
+}
+.skeleton {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+  background: rgb(var(--bg-elevated));
 }
