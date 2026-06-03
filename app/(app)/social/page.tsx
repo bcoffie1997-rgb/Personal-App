@@ -1,13 +1,26 @@
 import { TopBar } from "@/components/layout/TopBar";
 import { DesktopHeader } from "@/components/layout/DesktopHeader";
-import { MonoNumber } from "@/components/shared/MonoNumber";
-import { CardLabel } from "@/components/shared/Card";
+import { ContentQueue } from "@/components/social/ContentQueue";
 import { CalendarStrip } from "@/components/social/CalendarStrip";
 import { PostRow } from "@/components/social/PostRow";
 import { EngagementTable } from "@/components/social/EngagementTable";
 import { IdeasBacklog } from "@/components/social/IdeasBacklog";
 import { SOCIAL_WEEK, TODAY_POSTS } from "@/lib/mock-data";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+
+function SectionHeader({ label }: { label: string }) {
+  return (
+    <h2 className="text-xs text-tertiary tracking-wide mb-3 mt-2 md:mt-0">{label}</h2>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <div className="text-[10px] tracking-wide text-tertiary">{label}</div>
+      <div className="tabular-nums mt-1 text-2xl text-primary font-semibold">{value}</div>
+    </div>
+  );
+}
 
 export default function SocialPage() {
   return (
@@ -15,14 +28,20 @@ export default function SocialPage() {
       <div className="md:hidden">
         <TopBar title="Social" />
       </div>
-      <DesktopHeader title="Social" subtitle="Plan, schedule, and publish across all platforms." />
+      <DesktopHeader title="Social" subtitle="Plan, post, measure — across every platform." />
 
-      <div className="px-5 md:px-0 pt-5 md:pt-2 space-y-4 md:space-y-6">
-        {/* This Week + Content Calendar side-by-side */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
-          <div className="bg-surface border border-border border-t-2 border-t-social rounded-card p-4 md:p-6">
-            <CardLabel className="mb-3">This Week</CardLabel>
-            <div className="grid grid-cols-3 gap-2 text-center">
+      <div className="px-5 md:px-0 pt-2 md:pt-0 space-y-10 md:space-y-12">
+        {/* Content to make today — hero */}
+        <section>
+          <SectionHeader label="Today's content queue" />
+          <ContentQueue />
+        </section>
+
+        {/* This week glance */}
+        <section>
+          <SectionHeader label="This week" />
+          <div className="bg-surface rounded-card p-5">
+            <div className="grid grid-cols-3 gap-2 text-center mb-4">
               <Stat label="Scheduled" value={String(SOCIAL_WEEK.scheduled)} />
               <Stat label="Posted" value={String(SOCIAL_WEEK.posted)} />
               <Stat label="Engaged" value={SOCIAL_WEEK.engaged.toLocaleString()} />
@@ -34,63 +53,35 @@ export default function SocialPage() {
               }))}
             />
           </div>
+        </section>
 
-          <div className="bg-surface border border-border rounded-card p-4 md:p-6">
-            <div className="flex items-center justify-between mb-3">
-              <CardLabel>Content Calendar</CardLabel>
-              <div className="flex items-center gap-2 text-xs text-secondary font-mono">
-                <ChevronLeft className="w-4 h-4" />
-                <span>May 27 — Jun 02</span>
-                <ChevronRight className="w-4 h-4" />
-              </div>
-            </div>
-            <CalendarStrip
-              days={SOCIAL_WEEK.daySchedule.map((d) => ({
-                day: d.day,
-                platforms: [...d.platforms],
-              }))}
-            />
-            <button className="mt-3 w-full py-2 text-sm text-secondary border border-border rounded-button active:bg-elevated hover:bg-elevated">
-              Open full calendar
-            </button>
-          </div>
-        </div>
-
-        {/* Today + Engagement side-by-side */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-4 md:gap-6">
-          <div className="bg-surface border border-border rounded-card p-4 md:p-6">
-            <CardLabel className="mb-1">Today</CardLabel>
-            <div>
+        {/* Today's posts + Engagement side-by-side on desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 md:gap-10">
+          <section>
+            <SectionHeader label="Today's posts" />
+            <div className="bg-surface rounded-card p-4">
               {TODAY_POSTS.map((p) => (
                 <PostRow key={p.id} {...p} status={p.status as "posted" | "scheduled" | "failed"} />
               ))}
             </div>
-          </div>
+          </section>
 
-          <div className="bg-surface border border-border rounded-card p-4 md:p-6">
-            <div className="flex items-center justify-between mb-2">
-              <CardLabel>Engagement</CardLabel>
-              <span className="text-xs text-tertiary">past 7 days</span>
+          <section>
+            <SectionHeader label="Engagement · past 7 days" />
+            <div className="bg-surface rounded-card p-4">
+              <EngagementTable />
+              <button className="mt-3 w-full py-2 text-sm text-secondary hover:text-primary text-center border-t border-border pt-3">
+                View detailed engagement
+              </button>
             </div>
-            <EngagementTable />
-            <button className="mt-3 w-full py-2 text-sm text-secondary border border-border rounded-button active:bg-elevated hover:bg-elevated">
-              View detailed engagement
-            </button>
-          </div>
+          </section>
         </div>
 
-        {/* Ideas */}
-        <IdeasBacklog />
+        {/* Ideas backlog */}
+        <section>
+          <IdeasBacklog />
+        </section>
       </div>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <div className="text-[10px] uppercase tracking-wider text-tertiary font-semibold">{label}</div>
-      <MonoNumber className="block mt-1 text-2xl text-primary font-bold">{value}</MonoNumber>
     </div>
   );
 }

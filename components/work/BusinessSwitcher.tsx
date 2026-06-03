@@ -9,19 +9,19 @@ type Props = {
 };
 
 export function BusinessSwitcher({ businesses, active, onChange }: Props) {
-  const items = [...businesses, { slug: "all", name: "ALL" }];
+  const items = [{ slug: "all", name: "All" }, ...businesses];
   return (
-    <div className="flex items-center gap-2 px-1 py-1 bg-elevated rounded-button">
+    <div className="inline-flex items-center bg-surface rounded-button p-0.5">
       {items.map((b) => (
         <button
           key={b.slug}
           type="button"
           onClick={() => onChange(b.slug)}
           className={cn(
-            "flex-1 px-3 py-2 rounded text-xs font-bold tracking-wider transition-colors uppercase",
+            "px-4 py-1.5 rounded text-sm font-medium transition-colors",
             active === b.slug
-              ? "bg-professional text-bg"
-              : "text-tertiary active:text-secondary"
+              ? "bg-bg text-primary shadow-sm"
+              : "text-tertiary hover:text-secondary"
           )}
         >
           {b.name}

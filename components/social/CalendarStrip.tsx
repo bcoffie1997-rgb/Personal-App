@@ -14,17 +14,20 @@ const platformColor: Record<string, string> = {
 
 export function CalendarStrip({ days }: { days: readonly DaySchedule[] }) {
   return (
-    <div className="grid grid-cols-7 gap-1 mt-3">
+    <div className="grid grid-cols-7 gap-2 mt-3">
       {days.map((d) => (
         <div key={d.day} className="flex flex-col items-center">
-          <span className="text-[10px] text-tertiary uppercase tracking-wider font-semibold">{d.day}</span>
-          <div className="mt-2 flex flex-col items-center gap-0.5 min-h-[24px]">
+          <span className="text-[10px] text-tertiary tracking-wide">{d.day}</span>
+          <div className="mt-2 flex flex-col items-center gap-1 min-h-[24px]">
             <div className="flex gap-0.5">
-              {d.platforms.map((p, i) => (
-                <span key={i} className={cn("w-1.5 h-1.5 rounded-full", platformColor[p] || "bg-tertiary")} />
-              ))}
+              {d.platforms.length > 0 ? (
+                d.platforms.map((p, i) => (
+                  <span key={i} className={cn("w-1.5 h-1.5 rounded-full", platformColor[p] || "bg-tertiary")} />
+                ))
+              ) : (
+                <span className="text-[10px] text-tertiary">—</span>
+              )}
             </div>
-            <div className="mt-1 text-[10px] text-secondary font-mono">{d.platforms.join("") || "·"}</div>
           </div>
         </div>
       ))}

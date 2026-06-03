@@ -1,5 +1,4 @@
 import { Sparkline } from "@/components/charts/Sparkline";
-import { MonoNumber } from "@/components/shared/MonoNumber";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -24,34 +23,35 @@ function formatValue(v: number, prefix?: string, suffix?: string) {
 export function KpiTile({ name, value, prefix, suffix, delta, deltaPct, series, flat, inverted }: Props) {
   // For inverted metrics (like churn), down is good
   const effectivePositive = inverted ? delta < 0 : delta > 0;
-  const arrow = flat ? "→" : delta > 0 ? "↑" : "↓";
+  const indicator = flat ? "—" : delta > 0 ? "▲" : "▼";
   const color = flat
     ? "text-tertiary"
     : effectivePositive
     ? "text-accent"
-    : "text-negative";
+    : "text-fitness";
 
   return (
-    <div className="bg-surface border border-border rounded-card p-3">
-      <div className="text-[10px] uppercase tracking-wider text-tertiary font-semibold">{name}</div>
-      <MonoNumber className="block mt-1 text-xl text-primary font-bold">
+    <div className="bg-surface rounded-card p-4">
+      <div className="text-xs text-tertiary tracking-wide">{name}</div>
+      <div className="tabular-nums mt-1.5 text-xl text-primary font-semibold">
         {formatValue(value, prefix, suffix)}
-      </MonoNumber>
-      <div className={cn("mt-0.5 text-xs font-mono tabular-nums", color)}>
-        {arrow}{" "}
-        {!flat && (
-          <>
+      </div>
+      <div className={cn("tabular-nums mt-0.5 text-xs flex items-center gap-1", color)}>
+        <span className="text-[9px]">{indicator}</span>
+        {!flat ? (
+          <span>
             {delta > 0 ? "+" : ""}
             {prefix ?? ""}
             {Math.abs(delta).toLocaleString()}
             {suffix ?? ""}
-            {" "}({deltaPct > 0 ? "+" : ""}{deltaPct.toFixed(0)}%)
-          </>
+            {" "}<span className="text-tertiary">({deltaPct > 0 ? "+" : ""}{deltaPct.toFixed(0)}%)</span>
+          </span>
+        ) : (
+          <span>flat</span>
         )}
-        {flat && <span>flat</span>}
       </div>
-      <div className="mt-2 -mx-1">
-        <Sparkline data={[...series]} color="rgb(var(--professional))" height={28} />
+      <div className="mt-3 -mx-1 opacity-70">
+        <Sparkline data={[...series]} color="rgb(var(--professional))" height={24} />
       </div>
     </div>
   );

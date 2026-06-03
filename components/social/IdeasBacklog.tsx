@@ -1,40 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { IDEAS_BACKLOG } from "@/lib/mock-data";
-import { CardLabel } from "@/components/shared/Card";
 
 export function IdeasBacklog() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="bg-surface border border-border rounded-card">
+    <div>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full p-4 flex items-center justify-between active:bg-elevated transition-colors rounded-card"
+        className="w-full bg-surface rounded-card p-4 flex items-center justify-between hover:bg-elevated transition-colors"
       >
         <div className="flex items-center gap-3">
-          <CardLabel>Ideas Backlog</CardLabel>
-          <span className="text-xs text-tertiary font-mono tabular-nums">{IDEAS_BACKLOG.length}</span>
+          <span className="text-xs text-tertiary tracking-wide">Ideas backlog</span>
+          <span className="text-xs text-tertiary tabular-nums">{IDEAS_BACKLOG.length}</span>
         </div>
-        {open ? <ChevronUp className="w-4 h-4 text-tertiary" /> : <ChevronDown className="w-4 h-4 text-tertiary" />}
+        <ChevronDown className={`w-4 h-4 text-tertiary transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="px-4 pb-4 space-y-2">
+        <div className="mt-2 bg-surface rounded-card p-2">
           {IDEAS_BACKLOG.map((idea) => (
             <button
               key={idea.id}
               type="button"
-              className="w-full text-left p-3 bg-elevated/60 rounded-button active:bg-elevated"
+              className="w-full text-left p-3 rounded-button hover:bg-bg transition-colors"
             >
-              <div className="text-sm text-primary">{idea.text}</div>
-              <div className="mt-1 flex items-center gap-2 text-[10px] text-tertiary">
-                <span className="px-1.5 py-0.5 rounded bg-social/15 text-social font-bold tracking-wider">
+              <div className="text-sm text-primary leading-snug">{idea.text}</div>
+              <div className="mt-1.5 flex items-center gap-2 text-xs">
+                <span className="px-1.5 py-0.5 rounded bg-elevated text-tertiary">
                   {idea.tag}
                 </span>
-                <span>{idea.captured}</span>
+                <span className="text-tertiary">{idea.captured}</span>
               </div>
             </button>
           ))}

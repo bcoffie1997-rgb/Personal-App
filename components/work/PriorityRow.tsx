@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -15,14 +16,16 @@ export function PriorityRow({ title, due, initiallyDone }: Props) {
     <button
       type="button"
       onClick={() => setDone((v) => !v)}
-      className="w-full flex items-start gap-3 py-2.5 -mx-2 px-2 rounded-button active:bg-elevated transition-colors text-left"
+      className="w-full flex items-start gap-3 py-2 -mx-2 px-2 rounded-button hover:bg-bg transition-colors text-left"
     >
       <span
         className={cn(
-          "w-4 h-4 rounded-full border flex-shrink-0 mt-0.5",
-          done ? "bg-accent border-accent" : "border-tertiary"
+          "w-4 h-4 rounded border flex-shrink-0 flex items-center justify-center mt-0.5 transition-colors",
+          done ? "bg-primary border-primary" : "border-tertiary"
         )}
-      />
+      >
+        {done && <Check className="w-3 h-3 text-bg" strokeWidth={3} />}
+      </span>
       <div className="flex-1 min-w-0">
         <div className={cn("text-sm", done ? "text-tertiary line-through" : "text-primary")}>
           {title}

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 type Props = {
   name: string;
@@ -16,13 +16,13 @@ const statusColor: Record<string, string> = {
   GROWING: "text-accent",
   STEADY: "text-info",
   "NEEDS ATTENTION": "text-warning",
-  DECLINING: "text-negative",
+  DECLINING: "text-fitness",
 };
 
-const trendArrow: Record<string, string> = {
-  up: "↑",
-  flat: "→",
-  down: "↓",
+const trendIndicator: Record<string, string> = {
+  up: "▲",
+  flat: "—",
+  down: "▼",
 };
 
 export function BusinessRollupRow({ name, status, trend, summary, detail, pipelineFilled, onClick }: Props) {
@@ -30,30 +30,31 @@ export function BusinessRollupRow({ name, status, trend, summary, detail, pipeli
     <button
       type="button"
       onClick={onClick}
-      className="w-full text-left py-3 border-b border-border last:border-b-0 active:bg-elevated -mx-2 px-2 rounded-button"
+      className="group w-full text-left p-4 rounded-button hover:bg-bg transition-colors"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-1.5">
         <span className="text-base font-semibold text-primary">{name}</span>
-        <div className="flex items-center gap-2">
-          <span className={cn("text-xs font-bold tracking-wider", statusColor[status] ?? "text-secondary")}>
-            {trendArrow[trend] ?? "·"} {status}
+        <div className="flex items-center gap-3">
+          <span className={cn("text-xs font-medium tracking-wide flex items-center gap-1", statusColor[status] ?? "text-secondary")}>
+            <span className="text-[8px]">{trendIndicator[trend] ?? "·"}</span>
+            {status}
           </span>
-          <ChevronRight className="w-4 h-4 text-tertiary" />
+          <ArrowUpRight className="w-3.5 h-3.5 text-tertiary opacity-0 group-hover:opacity-100 transition-opacity" />
         </div>
       </div>
-      <div className="mt-1 text-sm text-secondary">{summary}</div>
+      <div className="text-sm text-secondary tabular-nums">{summary}</div>
       {pipelineFilled !== undefined ? (
-        <div className="mt-2">
+        <div className="mt-2.5">
           <div className="h-1 rounded-full bg-elevated overflow-hidden">
             <div
               className="h-full bg-professional rounded-full"
               style={{ width: `${pipelineFilled * 100}%` }}
             />
           </div>
-          {detail && <div className="mt-1 text-xs text-tertiary">{detail}</div>}
+          {detail && <div className="mt-1.5 text-xs text-tertiary">{detail}</div>}
         </div>
       ) : (
-        detail && <div className="mt-1 text-xs text-tertiary">{detail}</div>
+        detail && <div className="mt-1.5 text-xs text-tertiary">{detail}</div>
       )}
     </button>
   );

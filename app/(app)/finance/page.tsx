@@ -1,14 +1,13 @@
 import { TopBar } from "@/components/layout/TopBar";
 import { DesktopHeader } from "@/components/layout/DesktopHeader";
-import { MonoNumber } from "@/components/shared/MonoNumber";
 import { Delta } from "@/components/shared/Delta";
-import { CardLabel } from "@/components/shared/Card";
 import { LineChart } from "@/components/charts/LineChart";
 import { CreditScoreRing } from "@/components/finance/CreditScoreRing";
 import { AccountRow } from "@/components/finance/AccountRow";
 import { TransactionRow } from "@/components/finance/TransactionRow";
 import { BillRow } from "@/components/finance/BillRow";
 import { TimeRangePills } from "@/components/finance/TimeRangePills";
+import { SubscriptionsCard } from "@/components/finance/SubscriptionsCard";
 import {
   NET_WORTH,
   netWorthSeries,
@@ -17,6 +16,12 @@ import {
   UPCOMING_BILLS,
   RECENT_TRANSACTIONS,
 } from "@/lib/mock-data";
+
+function SectionHeader({ label }: { label: string }) {
+  return (
+    <h2 className="text-xs text-tertiary tracking-wide mb-3 mt-2 md:mt-0">{label}</h2>
+  );
+}
 
 export default function FinancePage() {
   const billsTotal = UPCOMING_BILLS.reduce((sum, b) => sum + b.amount, 0);
@@ -28,60 +33,60 @@ export default function FinancePage() {
       <div className="md:hidden">
         <TopBar title="Finance" />
       </div>
-      <DesktopHeader title="Finance" subtitle="Accounts, net worth, credit, bills, transactions." />
+      <DesktopHeader title="Finance" subtitle="Accounts, net worth, credit, bills — everything." />
 
-      <div className="px-5 md:px-0 pt-5 md:pt-2 space-y-4 md:space-y-6">
-        {/* Net Worth + Credit Score row */}
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 md:gap-6">
-          <div className="bg-surface border border-border border-t-2 border-t-finance rounded-card p-5 md:p-6">
-            <CardLabel>Net Worth</CardLabel>
-            <MonoNumber className="block mt-2 text-[40px] md:text-[52px] leading-none font-bold text-primary">
-              ${NET_WORTH.current.toLocaleString()}
-            </MonoNumber>
-            <div className="mt-2 flex items-center gap-2 text-sm md:text-base">
-              <Delta value={NET_WORTH.delta7d} percent={NET_WORTH.deltaPct7d} />
-              <span className="text-tertiary">past 7 days</span>
-            </div>
-            <div className="mt-4 mb-3">
-              <TimeRangePills accent="finance" />
-            </div>
-            <div className="-mx-1">
-              <LineChart
-                data={netWorthSeries}
-                color="rgb(var(--finance))"
-                height={180}
-                format="currency"
-              />
-            </div>
-          </div>
-
-          {/* Credit Score */}
-          <div className="bg-surface border border-border rounded-card p-4 md:p-6">
-            <div className="flex items-center justify-between mb-3">
-              <CardLabel>Credit Score</CardLabel>
-              <span className="text-xs text-tertiary">updated {CREDIT_SCORE.updatedDaysAgo}d ago</span>
-            </div>
-            <div className="flex items-center gap-6 md:flex-col md:gap-4 md:items-center md:justify-center md:flex-1">
-              <CreditScoreRing score={CREDIT_SCORE.score} />
-              <div className="flex-1 md:text-center md:flex-none">
-                <Delta value={CREDIT_SCORE.delta} prefix="" />
-                <div className="text-accent text-sm md:text-base font-semibold mt-1">{CREDIT_SCORE.category}</div>
-                <button className="mt-3 text-sm text-secondary active:text-primary hover:text-primary">
-                  View history & factors →
-                </button>
+      <div className="px-5 md:px-0 pt-2 md:pt-0 space-y-10 md:space-y-12">
+        {/* Net Worth + Credit Score */}
+        <section>
+          <SectionHeader label="Snapshot" />
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 md:gap-6">
+            <div className="bg-surface rounded-card p-5 md:p-6">
+              <div className="flex items-baseline justify-between mb-2">
+                <span className="text-xs text-tertiary tracking-wide">Net worth</span>
+                <TimeRangePills />
+              </div>
+              <div className="tabular-nums text-[40px] md:text-[48px] leading-none font-semibold text-primary tracking-tight">
+                ${NET_WORTH.current.toLocaleString()}
+              </div>
+              <div className="mt-2 flex items-center gap-2 text-sm">
+                <Delta value={NET_WORTH.delta7d} percent={NET_WORTH.deltaPct7d} />
+                <span className="text-tertiary">· past 7 days</span>
+              </div>
+              <div className="mt-4 -mx-1 opacity-80">
+                <LineChart
+                  data={netWorthSeries}
+                  color="rgb(var(--finance))"
+                  height={160}
+                  format="currency"
+                />
               </div>
             </div>
+
+            {/* Credit Score */}
+            <div className="bg-surface rounded-card p-5 md:p-6 flex flex-col">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs text-tertiary tracking-wide">Credit score</span>
+                <span className="text-xs text-tertiary">updated {CREDIT_SCORE.updatedDaysAgo}d ago</span>
+              </div>
+              <div className="flex-1 flex items-center justify-center">
+                <CreditScoreRing score={CREDIT_SCORE.score} />
+              </div>
+              <div className="mt-4 flex items-center justify-between pt-3 border-t border-border">
+                <Delta value={CREDIT_SCORE.delta} prefix="" />
+                <span className="text-sm text-primary font-medium">{CREDIT_SCORE.category}</span>
+              </div>
+              <button className="mt-2 text-xs text-tertiary hover:text-secondary text-left">
+                View history & factors →
+              </button>
+            </div>
           </div>
-        </div>
+        </section>
 
         {/* Accounts + Bills side-by-side */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-4 md:gap-6">
-          <div className="bg-surface border border-border rounded-card p-4 md:p-6">
-            <div className="flex items-center justify-between mb-2">
-              <CardLabel>Accounts</CardLabel>
-              <span className="text-xs text-tertiary font-mono tabular-nums">{ACCOUNTS.length}</span>
-            </div>
-            <div>
+        <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-8 md:gap-10">
+          <section>
+            <SectionHeader label={`Accounts · ${ACCOUNTS.length}`} />
+            <div className="bg-surface rounded-card p-4 md:p-5">
               {ACCOUNTS.map((a) => (
                 <AccountRow
                   key={a.id}
@@ -91,61 +96,67 @@ export default function FinancePage() {
                   limit={"limit" in a ? a.limit : undefined}
                 />
               ))}
+              <button className="mt-3 w-full py-2 text-sm text-tertiary hover:text-secondary text-center border-t border-border pt-3">
+                View all accounts
+              </button>
             </div>
-            <button className="mt-3 w-full py-2 text-sm text-secondary border border-border rounded-button active:bg-elevated hover:bg-elevated">
-              View all accounts
+          </section>
+
+          <section>
+            <SectionHeader label="Upcoming bills · next 7 days" />
+            <div className="bg-surface rounded-card p-4 md:p-5">
+              <div className="divide-y divide-border">
+                {UPCOMING_BILLS.map((b) => (
+                  <BillRow key={b.id} {...b} />
+                ))}
+              </div>
+              <div className="mt-3 pt-3 border-t border-border-strong flex items-center justify-between">
+                <span className="text-sm text-tertiary">Total</span>
+                <span className="tabular-nums text-base font-semibold text-primary">
+                  ${billsTotal.toLocaleString()}
+                </span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        {/* Subscriptions */}
+        <section>
+          <SectionHeader label="Recurring · subscriptions" />
+          <SubscriptionsCard />
+        </section>
+
+        {/* Transactions */}
+        <section>
+          <SectionHeader label="Recent transactions" />
+          <div className="bg-surface rounded-card p-4 md:p-5">
+            {todayTx.length > 0 && (
+              <>
+                <div className="text-[10px] tracking-wide text-tertiary">Today</div>
+                <div className="divide-y divide-border">
+                  {todayTx.map((t) => (
+                    <TransactionRow key={t.id} {...t} />
+                  ))}
+                </div>
+              </>
+            )}
+
+            {yesterdayTx.length > 0 && (
+              <>
+                <div className="mt-3 text-[10px] tracking-wide text-tertiary">Yesterday</div>
+                <div className="divide-y divide-border">
+                  {yesterdayTx.map((t) => (
+                    <TransactionRow key={t.id} {...t} />
+                  ))}
+                </div>
+              </>
+            )}
+
+            <button className="mt-3 w-full py-2 text-sm text-tertiary hover:text-secondary text-center border-t border-border pt-3">
+              View all transactions
             </button>
           </div>
-
-          <div className="bg-surface border border-border rounded-card p-4 md:p-6">
-            <div className="flex items-center justify-between mb-2">
-              <CardLabel>Upcoming Bills</CardLabel>
-              <span className="text-xs text-tertiary">next 7 days</span>
-            </div>
-            <div className="divide-y divide-border">
-              {UPCOMING_BILLS.map((b) => (
-                <BillRow key={b.id} {...b} />
-              ))}
-            </div>
-            <div className="mt-3 pt-3 border-t border-border-strong flex items-center justify-between">
-              <span className="text-sm text-tertiary">Total</span>
-              <MonoNumber className="text-base font-semibold text-primary">
-                ${billsTotal.toLocaleString()}
-              </MonoNumber>
-            </div>
-          </div>
-        </div>
-
-        {/* Transactions full-width */}
-        <div className="bg-surface border border-border rounded-card p-4 md:p-6">
-          <CardLabel className="mb-2">Recent Transactions</CardLabel>
-
-          {todayTx.length > 0 && (
-            <>
-              <div className="mt-3 text-xs font-semibold text-tertiary uppercase tracking-wider">Today</div>
-              <div className="divide-y divide-border">
-                {todayTx.map((t) => (
-                  <TransactionRow key={t.id} {...t} />
-                ))}
-              </div>
-            </>
-          )}
-
-          {yesterdayTx.length > 0 && (
-            <>
-              <div className="mt-3 text-xs font-semibold text-tertiary uppercase tracking-wider">Yesterday</div>
-              <div className="divide-y divide-border">
-                {yesterdayTx.map((t) => (
-                  <TransactionRow key={t.id} {...t} />
-                ))}
-              </div>
-            </>
-          )}
-
-          <button className="mt-3 w-full py-2 text-sm text-secondary border border-border rounded-button active:bg-elevated hover:bg-elevated">
-            View all transactions
-          </button>
-        </div>
+        </section>
       </div>
     </div>
   );
